@@ -5,26 +5,11 @@
     <title>Title</title>
 </head>
 <body>
-  <h2>Добавление товара</h2>
-  <form action="" method="post">
+<h2>Добавление товара</h2>
+<form action="" method="post">
     {% csrf_token %}
-    <p>
-      <label>Введите название товара</label>
-      <input type="text" name="name">
-    </p>
-    <p>
-      <label>Введите цену</label>
-      <input type="number" name="price">
-    </p>
-    <p>
-      <label>Выберите компанию</label>
-      <select name="company">
-          {% for company in companies %}
-            <option value="{{company.id}}">{{company.name}}</option>
-          {% endfor %}
-      </select>
-    </p>
+    {{form}}
     <input type="submit" value="Сохранить">
-  </form>
+</form>
 </body>
 </html>

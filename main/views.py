@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import Product, Company
 from django.http import HttpResponseRedirect, HttpResponseNotFound
+from .forms import ProductForm
 
 
 def index(request):
@@ -10,31 +11,27 @@ def index(request):
 
 def create(request):
     create_companies()
-
+    form = ProductForm()
     if request.method == 'POST':
-        product = Product()
-        product.name = request.POST.get('name')
-        product.price = request.POST.get('price')
-        product.company_id = request.POST.get('company')
-        product.save()
+        form = ProductForm(request.POST)
+        if form.is_valid():
+            form.save()
         return HttpResponseRedirect('/')
 
-    companies = Company.objects.all()
-    return render(request, 'create.html', {'companies': companies})
+    return render(request, 'create.html', {'form': form})
 
 
 def edit(request, id):
     try:
         product = Product.objects.get(id=id)
+        form = ProductForm(instance=product)
         if request.method == "POST":
-            product.name = request.POST.get("name")
-            product.price = request.POST.get("price")
-            product.company_id = request.POST.get("company")
-            product.save()
+            form = ProductForm(request.POST, instance=product)
+            if form.is_valid():
+                form.save()
             return HttpResponseRedirect("/")
         else:
-            companies = Company.objects.all()
-            return render(request, "edit.html", {"product": product, "companies": companies})
+            return render(request, "edit.html", {"form": form})
     except Product.DoesNotExist:
         return HttpResponseNotFound(" <h2›Product not found</h2>")
 
